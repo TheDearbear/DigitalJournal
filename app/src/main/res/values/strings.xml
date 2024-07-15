@@ -1,0 +1,98 @@
+<resources>
+    <string name="app_name">Digital Journal</string>
+    <string name="floating_write_message">Write Message</string>
+    <string name="floating_add_new_account">Add new account</string>
+    <string name="bottom_bar_journal">Journal</string>
+    <string name="bottom_bar_home">Home</string>
+    <string name="bottom_bar_account">Account</string>
+    <string name="nav_route_home" translatable="false">route/home</string>
+    <string name="nav_route_journal" translatable="false">route/journal</string>
+    <string name="nav_route_account" translatable="false">route/account</string>
+    <string name="dialog_vendor_text">The \'Vendor\' field allows you to specify the ID of an educational institution for work with it. In most cases, it is sufficient to not specify the value in order to use all available educational institutions to journal. You can find the school ID inside the application under \"Account > Extended Information > School ID\".</string>
+    <string name="login_vendor">Vendor (optional)</string>
+    <string name="login_domain_or_ip">Domain or IP</string>
+    <string name="login_login">Login</string>
+    <string name="login_password">Password</string>
+    <string name="login_token">Token</string>
+    <string name="login_switch_method">Switch login method</string>
+    <string name="login_login_button">Login</string>
+    <string name="login_dev_key">Access Key</string>
+    <string name="journal_no_lessons">Information about lessons is missing</string>
+    <string name="account_select_no_accounts">You don\'t have any accounts yet.</string>
+    <string name="account_select_no_accounts_try_add">Try adding some new ones!</string>
+    <string name="account_switch_account">Switch Account</string>
+    <string name="account_edit_delete">Delete</string>
+    <string name="account_edit_save">Save changes</string>
+    <string name="account_edit_account_deletion">Account deletion</string>
+    <string name="dialog_account_delete_sure">Are you sure want to delete this account?</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="account_edit_editing">Account Editing</string>
+    <string name="dialog_authentication">Authenticating</string>
+    <string name="dialog_authorization">Checking authorization</string>
+    <string name="login_error_network">Network error</string>
+    <string name="login_error_devkey">Invalid access key</string>
+    <string name="login_error_token">Invalid token</string>
+    <string name="login_error_domain">Unknown domain</string>
+    <string name="login_error_login">Invalid credentials</string>
+    <string name="login_error_invalid">This account is no longer valid</string>
+    <string name="account_loading">Loading account information</string>
+    <string name="journal_fold">Fold</string>
+    <string name="journal_unfold">Unfold</string>
+    <string name="journal_schedule_required">Schedule required</string>
+    <string name="journal_current_week">Current week</string>
+    <string name="journal_previous_week">Previous week</string>
+    <string name="journal_next_week">Next week</string>
+    <string name="journal_some_week">%d week of this year</string>
+    <string name="journal_another_year_week">week %d of year %d</string>
+    <string name="journal_vacation">Vacation</string>
+    <string name="journal_holiday">Holiday</string>
+    <string name="home_messages_sent">Sent Messages</string>
+    <string name="home_messages_received">Received Messages</string>
+    <string name="account_card_name">Name</string>
+    <string name="account_card_school">School</string>
+    <string name="account_card_home_teacher">Home Teacher</string>
+    <string name="account_card_grade">Grade</string>
+    <string name="nav_route_home_message" translatable="false">route/home/message/{id}</string>
+    <string name="nav_route_home_announcement" translatable="false">route/home/announcement/{id}</string>
+    <string name="nav_route_home_messages" translatable="false">route/home/messages/{type}</string>
+    <string name="error_forbidden">This resource is forbidden for you</string>
+    <string name="home_messages_no_message">No message</string>
+    <string name="home_announcements_no_announcement">No announcement</string>
+    <string name="account_extended_information">Extended Information</string>
+    <string name="nav_route_account_extended_infomation" translatable="false">route/account/extended_information</string>
+    <string name="ext_info_roles">Roles</string>
+    <string name="ext_info_allowed_ads">Allowed Ads</string>
+    <string name="ext_info_allowed_sections">Allowed Sections</string>
+    <string name="ext_info_message_signature">Message Signature</string>
+    <string name="ext_info_upload_file_url">File Upload URL</string>
+    <string name="ext_info_support_phone">Support Phone</string>
+    <string name="ext_info_support_email">Support Email</string>
+    <string name="ext_info_support_link">Support Link</string>
+    <string name="ext_info_support_description">Support Description</string>
+    <string name="ext_info_name">Name</string>
+    <string name="ext_info_age">Age</string>
+    <string name="ext_info_id">Id</string>
+    <string name="ext_info_vuid" translatable="false">VUID</string>
+    <string name="ext_info_id_hash">Id Hash</string>
+    <string name="ext_info_title">Title</string>
+    <string name="ext_info_vendor">Vendor</string>
+    <string name="ext_info_vendor_id">Vendor Id</string>
+    <string name="ext_info_guid" translatable="false">GUID</string>
+    <string name="ext_info_lastname">Lastname</string>
+    <string name="ext_info_firstname">Firstname</string>
+    <string name="ext_info_middlename">Middle Name</string>
+    <string name="ext_info_gender">Gender</string>
+    <string name="ext_info_email">Email</string>
+    <string name="ext_info_email_confirmed">Email Confirmed</string>
+    <string name="ext_info_region">Region</string>
+    <string name="ext_info_region_code">Region Code</string>
+    <string name="ext_info_city">City</string>
+    <string name="ext_info_licey" translatable="false">rt_licey_school_end_date</string>
+    <string name="home_messages_no_sent">No sent messages available</string>
+    <string name="home_messages_no_received">No received messages available</string>
+    <string name="account_about">About</string>
+    <string name="account_about_body">This application was created as part of a term project. It is designed to work with compatible digital journal servers.</string>
+    <string name="button_close">Close</string>
+    <string name="account_app_settings">Application Settings</string>
+    <string name="nav_route_account_app_settings" translatable="false">route/account/app_settings</string>
+</resources>
