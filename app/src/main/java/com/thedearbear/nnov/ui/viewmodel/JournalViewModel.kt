@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thedearbear.nnov.Singleton
 import com.thedearbear.nnov.api.responses.DiaryResponse
+import com.thedearbear.nnov.api.responses.DiaryResponseLesson
 import com.thedearbear.nnov.journal.DayEntry
 import com.thedearbear.nnov.journal.DayType
 import com.thedearbear.nnov.journal.Lesson
@@ -80,6 +81,8 @@ class JournalViewModel : ViewModel() {
                             val student = diary.students.values.first()
 
                             student.days.map { day ->
+                                val lessons = day.value.items
+
                                 DayEntry(
                                     date = LocalDate.parse(day.key, DateTimeFormatter.BASIC_ISO_DATE),
                                     type = when (day.value.alert) {
@@ -88,28 +91,8 @@ class JournalViewModel : ViewModel() {
                                         else -> DayType.NORMAL
                                     },
                                     typeSpecific = day.value.holidayName,
-                                    lessons = day.value.items.map { lesson ->
-                                        Lesson(
-                                            number = lesson.key.toInt(),
-                                            name = lesson.value.name,
-                                            homework = lesson.value.homework.map { homework ->
-                                                homework.value.value
-                                            },
-                                            files = lesson.value.files.map { file ->
-                                                URL(file.link)
-                                            },
-                                            marks = lesson.value.assessments?.map { mark ->
-                                                mark.value
-                                            } ?: listOf(),
-                                            time = if (lesson.value.startTime == null || lesson.value.endTime == null) null
-                                            else {
-                                                Pair(
-                                                    LocalTime.parse(lesson.value.startTime),
-                                                    LocalTime.parse(lesson.value.endTime)
-                                                )
-                                            }
-                                        )
-                                    }
+                                    lessons = lessons?.map { lesson -> mapRawLesson(lesson) }
+                                        ?: emptyList()
                                 )
                             }
                         }
@@ -119,5 +102,28 @@ class JournalViewModel : ViewModel() {
                 onFailure = onFailure
             )
         }
+    }
+
+    private fun mapRawLesson(lesson: Map.Entry<String, DiaryResponseLesson>): Lesson {
+        return Lesson(
+            number = lesson.key.toInt(),
+            name = lesson.value.name,
+            homework = lesson.value.homework.map { homework ->
+                homework.value.value
+            },
+            files = lesson.value.files.map { file ->
+                URL(file.link)
+            },
+            marks = lesson.value.assessments?.map { mark ->
+                mark.value
+            } ?: listOf(),
+            time = if (lesson.value.startTime == null || lesson.value.endTime == null) null
+            else {
+                Pair(
+                    LocalTime.parse(lesson.value.startTime),
+                    LocalTime.parse(lesson.value.endTime)
+                )
+            }
+        )
     }
 }

@@ -21,7 +21,8 @@ data class DiaryResponseDay(
     val title: String,
     val alert: String?,
     @Json(name = "holiday_name") val holidayName: String?,
-    val items: Map<String, DiaryResponseLesson>
+    val items: Map<String, DiaryResponseLesson>?,
+    val itemsExtDay: List<DiaryResponseExtendedDayLesson>?
 )
 
 @JsonClass(generateAdapter = true)
@@ -34,6 +35,18 @@ data class DiaryResponseLesson(
     @Json(name = "lesson_id") val lessonId: String,
     val num: String,
     val room: String,
+    val teacher: String,
+    val sort: Int,
+    @Json(name = "grp_short") val groupShort: String?,
+    @Json(name = "grp") val group: String?,
+    @Json(name = "starttime") val startTime: String?,
+    @Json(name = "endtime") val endTime: String?
+)
+
+@JsonClass(generateAdapter = true)
+data class DiaryResponseExtendedDayLesson(
+    val name: String,
+    val topic: String,
     val teacher: String,
     val sort: Int,
     @Json(name = "grp_short") val groupShort: String?,
