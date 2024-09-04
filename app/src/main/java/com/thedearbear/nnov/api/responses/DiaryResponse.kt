@@ -22,7 +22,7 @@ data class DiaryResponseDay(
     val alert: String?,
     @Json(name = "holiday_name") val holidayName: String?,
     val items: Map<String, DiaryResponseLesson>?,
-    val itemsExtDay: List<DiaryResponseExtendedDayLesson>?
+    @Json(name = "items_extday") val itemsExtDay: List<DiaryResponseExtendedDayLesson>?
 )
 
 @JsonClass(generateAdapter = true)
