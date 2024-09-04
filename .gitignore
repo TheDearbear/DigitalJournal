@@ -64,3 +64,5 @@ test-splits/
 /.teamcity/target
 /gradle.ipr
 /gradle.iws
+
+local.properties
