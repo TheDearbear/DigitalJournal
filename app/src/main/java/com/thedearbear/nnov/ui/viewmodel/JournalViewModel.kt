@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thedearbear.nnov.Singleton
 import com.thedearbear.nnov.api.responses.DiaryResponse
+import com.thedearbear.nnov.api.responses.DiaryResponseExtendedDayLesson
 import com.thedearbear.nnov.api.responses.DiaryResponseLesson
 import com.thedearbear.nnov.journal.DayEntry
 import com.thedearbear.nnov.journal.DayType
@@ -81,7 +82,19 @@ class JournalViewModel : ViewModel() {
                             val student = diary.students.values.first()
 
                             student.days.map { day ->
-                                val lessons = day.value.items
+                                val regularLessons = day.value.items
+                                val extendedLessons = day.value.itemsExtDay
+
+                                val lessons = (regularLessons?.map { lesson -> mapRawLesson(lesson) }
+                                    ?: emptyList()).toMutableList()
+
+                                if (extendedLessons != null) {
+                                    lessons += extendedLessons.map { lesson ->
+                                        mapExtendedLesson(lesson)
+                                    }
+
+                                    lessons.sortWith(compareBy(Lesson::number, Lesson::subNumber))
+                                }
 
                                 DayEntry(
                                     date = LocalDate.parse(day.key, DateTimeFormatter.BASIC_ISO_DATE),
@@ -91,8 +104,7 @@ class JournalViewModel : ViewModel() {
                                         else -> DayType.NORMAL
                                     },
                                     typeSpecific = day.value.holidayName,
-                                    lessons = lessons?.map { lesson -> mapRawLesson(lesson) }
-                                        ?: emptyList()
+                                    lessons = lessons
                                 )
                             }
                         }
@@ -122,6 +134,24 @@ class JournalViewModel : ViewModel() {
                 Pair(
                     LocalTime.parse(lesson.value.startTime),
                     LocalTime.parse(lesson.value.endTime)
+                )
+            }
+        )
+    }
+
+    private fun mapExtendedLesson(lesson: DiaryResponseExtendedDayLesson): Lesson {
+        return Lesson(
+            number = lesson.sort / 10,
+            subNumber = lesson.sort % 10,
+            name = lesson.name,
+            homework = emptyList(),
+            files = emptyList(),
+            marks = emptyList(),
+            time = if (lesson.startTime == null || lesson.endTime == null) null
+            else {
+                Pair(
+                    LocalTime.parse(lesson.startTime),
+                    LocalTime.parse(lesson.endTime)
                 )
             }
         )

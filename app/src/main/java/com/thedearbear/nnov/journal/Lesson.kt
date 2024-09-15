@@ -5,6 +5,7 @@ import java.time.LocalTime
 
 data class Lesson(
     val number: Int,
+    val subNumber: Int = 0,
     val name: String,
     val homework: List<String>,
     val files: List<URL>,
