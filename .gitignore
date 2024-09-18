@@ -39,30 +39,29 @@ test-splits/
 # Kotlin
 .kotlin
 
-# IDEA
-!/.idea
-/.idea/*
-# Needed to track entry points and nullability annotations (see https://youtrack.jetbrains.com/issue/IDEA-354114 and https://youtrack.jetbrains.com/issue/IDEA-354115)
-!/.idea/misc.xml
+local.properties
+
+*.iml
+*.iws
+/out/
+
 !/.idea/codeStyles
 !/.idea/inspectionProfiles
 !/.idea/icon.png
 !/.idea/icon_dark.png
-*/**/.idea
-*/**/.shelf
-.shelf
-/*.iml
-/*/*.iml
-/*/*/*.iml
-/*/*/*/*.iml
-/*/*/*/*/*.iml
-/out
-/*/out
-/*/*/out
-/*/*/*/out
-/*/*/*/*/out
-/.teamcity/target
-/gradle.ipr
-/gradle.iws
 
-local.properties
+.idea/tasks.xml
+.idea/.name
+.idea/copyright/profiles_settings.xml
+.idea/encodings.xml
+.idea/modules.xml
+.idea/scopes/scope_settings.xml
+.idea/dictionaries
+.idea/jsLibraryMappings.xml
+.idea/datasources.xml
+.idea/dataSources.ids
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+.idea/jarRepositories.xml
+.idea/navEditor.xml
