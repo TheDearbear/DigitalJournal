@@ -30,7 +30,7 @@ import java.util.Date
 @Composable
 fun JournalTab(
     userId: Int,
-    showRings: Boolean = false,
+    showRings: Boolean = true,
     //showCabinet: Boolean = false,
     viewModel: JournalViewModel,
     onReloadRequest: (Int) -> Unit,
@@ -118,7 +118,7 @@ fun JournalTab(
             state.days.forEachIndexed { index, pair ->
                 DiaryDay(
                     day = pair.first,
-                    showRings = true,
+                    showRings = showRings,
                     extended = pair.second
                 ) {
                     val mutable = state.days.toMutableList()

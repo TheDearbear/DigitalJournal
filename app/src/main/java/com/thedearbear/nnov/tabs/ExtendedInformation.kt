@@ -26,7 +26,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import com.thedearbear.nnov.R
 import com.thedearbear.nnov.ui.viewmodel.MainViewModel
-import com.thedearbear.nnov.utils.MaterialTextLinkStyles
+import com.thedearbear.nnov.utils.materialTextLinkStyles
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,14 +64,14 @@ fun ExtendedInformation(
             RulesEntry(R.string.ext_info_message_signature, rules.messageSignature)
             RulesEntry(R.string.ext_info_upload_file_url, buildAnnotatedString {
                 append(rules.uploadFileUrl)
-                addLink(LinkAnnotation.Url(rules.uploadFileUrl, MaterialTextLinkStyles()), 0, rules.uploadFileUrl.length)
+                addLink(LinkAnnotation.Url(rules.uploadFileUrl, materialTextLinkStyles()), 0, rules.uploadFileUrl.length)
                 toAnnotatedString()
             })
             RulesEntry(R.string.ext_info_support_phone, rules.supportPhone)
             RulesEntry(R.string.ext_info_support_email, rules.supportEmail)
             RulesEntry(R.string.ext_info_support_link, buildAnnotatedString {
                 append(rules.supportHelpdesk)
-                addLink(LinkAnnotation.Url(rules.supportHelpdesk, MaterialTextLinkStyles()), 0, rules.supportHelpdesk.length)
+                addLink(LinkAnnotation.Url(rules.supportHelpdesk, materialTextLinkStyles()), 0, rules.supportHelpdesk.length)
                 toAnnotatedString()
             })
             RulesEntry(R.string.ext_info_support_description, rules.supportDescription)

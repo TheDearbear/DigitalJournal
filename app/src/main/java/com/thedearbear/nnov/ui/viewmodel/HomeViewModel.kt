@@ -1,6 +1,5 @@
 package com.thedearbear.nnov.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thedearbear.nnov.Singleton

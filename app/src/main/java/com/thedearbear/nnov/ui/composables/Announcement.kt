@@ -20,7 +20,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.unit.dp
 import com.thedearbear.nnov.home.Announcement
-import com.thedearbear.nnov.utils.MaterialTextLinkStyles
+import com.thedearbear.nnov.utils.materialTextLinkStyles
 import com.thedearbear.nnov.utils.toDisplayString
 
 @Composable
@@ -68,7 +68,7 @@ fun Announcement(
                 Text(
                     text = AnnotatedString.fromHtml(
                         htmlString = announcement.body,
-                        linkStyles = MaterialTextLinkStyles()
+                        linkStyles = materialTextLinkStyles()
                     ),
                     style = MaterialTheme.typography.bodyMedium
                 )
