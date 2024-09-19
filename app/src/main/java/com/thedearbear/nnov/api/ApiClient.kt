@@ -2,6 +2,7 @@ package com.thedearbear.nnov.api
 
 import android.icu.util.DateInterval
 import com.squareup.moshi.Moshi
+import com.thedearbear.nnov.BuildConfig
 import com.thedearbear.nnov.api.adapters.DiaryDayAdapter
 import com.thedearbear.nnov.api.adapters.RelationGroupsAdapter
 import okhttp3.Call
@@ -23,7 +24,7 @@ data class ApiClient(
     var authToken: String? = null,
     var vendor: String = ApiConstants.DEFAULT_VENDOR,
 ) {
-    private val userAgent: String = "DigitalJournal/1.0"
+    private val userAgent: String = "DigitalJournal/" + BuildConfig.VERSION_NAME
     private var client: OkHttpClient = OkHttpClient()
 
     val moshi: Moshi = Moshi.Builder()
