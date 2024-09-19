@@ -14,8 +14,8 @@ android {
         applicationId = "com.thedearbear.nnov"
         minSdk = 31
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.1"
+        versionCode = 1020
+        versionName = "1.0.2"
 
         vectorDrawables {
             useSupportLibrary = true
