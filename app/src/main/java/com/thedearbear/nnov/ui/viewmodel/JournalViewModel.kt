@@ -9,7 +9,9 @@ import com.thedearbear.nnov.api.responses.DiaryResponseExtendedDayLesson
 import com.thedearbear.nnov.api.responses.DiaryResponseLesson
 import com.thedearbear.nnov.journal.DayEntry
 import com.thedearbear.nnov.journal.DayType
+import com.thedearbear.nnov.journal.Homework
 import com.thedearbear.nnov.journal.Lesson
+import com.thedearbear.nnov.journal.HomeworkFile
 import com.thedearbear.nnov.ui.state.JournalState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -120,11 +122,22 @@ class JournalViewModel : ViewModel() {
         return Lesson(
             number = lesson.key.toInt(),
             name = lesson.value.name,
-            homework = lesson.value.homework.map { homework ->
-                homework.value.value
-            },
-            files = lesson.value.files.map { file ->
-                URL(file.link)
+            homework = lesson.value.homework.map { kvHomework ->
+                val homework = kvHomework.value
+
+                Homework(
+                    id = homework.id.toInt(),
+                    message = homework.value,
+                    personal = homework.individual,
+                    files = lesson.value.files.filter { file ->
+                        file.toId == homework.id
+                    }.map { file ->
+                        HomeworkFile(
+                            name = file.filename,
+                            file = URL(file.link)
+                        )
+                    }
+                )
             },
             marks = lesson.value.assessments?.map { mark ->
                 mark.value
@@ -145,7 +158,6 @@ class JournalViewModel : ViewModel() {
             subNumber = lesson.sort % 10,
             name = lesson.name,
             homework = emptyList(),
-            files = emptyList(),
             marks = emptyList(),
             time = if (lesson.startTime == null || lesson.endTime == null) null
             else {

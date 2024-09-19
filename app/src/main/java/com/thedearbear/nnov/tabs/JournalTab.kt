@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.thedearbear.nnov.R
+import com.thedearbear.nnov.journal.DayEntry
 import com.thedearbear.nnov.ui.composables.DiaryDay
 import com.thedearbear.nnov.ui.composables.HorizontalEntrySlider
 import com.thedearbear.nnov.ui.viewmodel.JournalViewModel
@@ -33,6 +34,7 @@ fun JournalTab(
     showRings: Boolean = true,
     //showCabinet: Boolean = false,
     viewModel: JournalViewModel,
+    onHomework: (DayEntry, Int) -> Unit,
     onReloadRequest: (Int) -> Unit,
     onReloadSuccess: () -> Unit,
     onAuthFailure: (String) -> Unit,
@@ -119,13 +121,17 @@ fun JournalTab(
                 DiaryDay(
                     day = pair.first,
                     showRings = showRings,
-                    extended = pair.second
-                ) {
-                    val mutable = state.days.toMutableList()
-                    mutable[index] = Pair(pair.first, pair.second.not())
+                    extended = pair.second,
+                    onHomework = { hwIndex ->
+                        onHomework(pair.first, hwIndex)
+                    },
+                    onFold = {
+                        val mutable = state.days.toMutableList()
+                        mutable[index] = Pair(pair.first, pair.second.not())
 
-                    viewModel.updateDays(days = mutable)
-                }
+                        viewModel.updateDays(days = mutable)
+                    }
+                )
             }
         }
     }

@@ -8,6 +8,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -23,7 +24,11 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationRail
@@ -33,6 +38,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -55,6 +61,7 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.thedearbear.nnov.R
 import com.thedearbear.nnov.Singleton
+import com.thedearbear.nnov.journal.Lesson
 import com.thedearbear.nnov.tabs.AccountTab
 import com.thedearbear.nnov.tabs.AnnouncementInfo
 import com.thedearbear.nnov.tabs.ApplicationSettings
@@ -82,6 +89,8 @@ import java.net.UnknownHostException
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
 
+    private var sheetContent: (@Composable () -> Unit)? = null
+
     private lateinit var newAccountSuccess: (Int) -> Unit
     private var accountLoading: Job? = null
 
@@ -102,6 +111,7 @@ class MainActivity : ComponentActivity() {
         newAccountSuccess(id)
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -113,7 +123,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             val state by viewModel.state.collectAsState()
             var openAccountLoadingDialog by remember { mutableStateOf(false) }
+            var showSheet by remember { mutableStateOf(false) }
             val snackbarHostState = remember { SnackbarHostState() }
+            val sheetState = rememberModalBottomSheetState()
 
             val scope = rememberCoroutineScope()
             val navController = rememberNavController(ComposeNavigator())
@@ -186,6 +198,18 @@ class MainActivity : ComponentActivity() {
                         state.dialog != null -> {
                             state.dialog?.let { it() }
                         }
+
+                        showSheet -> {
+                            ModalBottomSheet(
+                                onDismissRequest = {
+                                    sheetContent = null
+                                    showSheet = false
+                                },
+                                sheetState = sheetState
+                            ) {
+                                sheetContent?.let { it() }
+                            }
+                        }
                     }
 
                     Row(
@@ -207,6 +231,10 @@ class MainActivity : ComponentActivity() {
                                         else getString(message)
                                     )
                                 }
+                            },
+                            requestSheet = { content ->
+                                sheetContent = content
+                                showSheet = true
                             }
                         )
                     }
@@ -221,7 +249,8 @@ class MainActivity : ComponentActivity() {
         navController: NavHostController,
         state: MainState,
         getNewAccountId: ActivityResultLauncher<Intent>,
-        requestSnackbar: (Int, Array<out Any>) -> Unit
+        requestSnackbar: (Int, Array<out Any>) -> Unit,
+        requestSheet: (@Composable () -> Unit) -> Unit
     ) {
         val navHome = stringResource(R.string.nav_route_home)
         val navHomeMessage = stringResource(R.string.nav_route_home_message)
@@ -269,6 +298,15 @@ class MainActivity : ComponentActivity() {
                 JournalTab(
                     userId = state.id,
                     viewModel = journalViewModel,
+                    onHomework = { day, index ->
+                        if (day.lessons.size > index) {
+                            val lesson = day.lessons[index]
+
+                            requestSheet {
+                                HomeworkSheet(lesson)
+                            }
+                        }
+                    },
                     onReloadRequest = { },
                     onReloadSuccess = { },
                     onAuthFailure = { message ->
@@ -387,6 +425,29 @@ class MainActivity : ComponentActivity() {
                 ExtendedInformation(
                     onBack = { navController.popBackStack() },
                     viewModel = viewModel
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun HomeworkSheet(lesson: Lesson) {
+        Column(
+            Modifier.padding(4.dp)
+        ) {
+            Text(
+                modifier = Modifier.padding(4.dp),
+                text = lesson.name,
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            lesson.homework.forEach { homework ->
+                HorizontalDivider()
+
+                Text(
+                    modifier = Modifier.padding(4.dp),
+                    text = homework.message,
+                    style = MaterialTheme.typography.bodyLarge
                 )
             }
         }

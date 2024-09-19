@@ -95,4 +95,5 @@
     <string name="button_close">Close</string>
     <string name="account_app_settings">Application Settings</string>
     <string name="nav_route_account_app_settings" translatable="false">route/account/app_settings</string>
+    <string name="journal_show_homework">Show homework</string>
 </resources>

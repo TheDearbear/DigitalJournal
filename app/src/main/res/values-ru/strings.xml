@@ -85,4 +85,5 @@
     <string name="account_about_body">Данное приложение создано в рамках работы над курсовым проектом. Оно предназначено для работы с совместимыми серверами электронного дневника.</string>
     <string name="button_close">Закрыть</string>
     <string name="account_app_settings">Настройки Приложения</string>
+    <string name="journal_show_homework">Показать д/з</string>
 </resources>

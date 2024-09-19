@@ -1,6 +1,7 @@
 package com.thedearbear.nnov.ui.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +45,7 @@ fun DiaryDay(
     showRings: Boolean = false,
     showLessonOnVacation: Boolean = true,
     extended: Boolean = false,
+    onHomework: (Int) -> Unit,
     onFold: () -> Unit
 ) {
     ElevatedCard(
@@ -143,14 +145,14 @@ fun DiaryDay(
                         },
                         supportingContent = {
                             if (lesson.homework.isNotEmpty()) {
-                                Column {
-                                    lesson.homework.forEach { homework ->
-                                        Text(
-                                            text = homework,
-                                            style = MaterialTheme.typography.bodyMedium
-                                        )
+                                Text(
+                                    text = stringResource(R.string.journal_show_homework),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    modifier = Modifier.clickable {
+                                        onHomework(index)
                                     }
-                                }
+                                )
                             }
                         },
                         leadingContent = {
