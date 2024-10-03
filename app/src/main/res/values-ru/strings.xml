@@ -86,4 +86,8 @@
     <string name="button_close">Закрыть</string>
     <string name="account_app_settings">Настройки Приложения</string>
     <string name="journal_show_homework">Показать д/з</string>
+    <string name="journal_homework_copied">Д/з скопировано</string>
+    <string name="journal_homework">Домашняя работа</string>
+    <string name="journal_download">Скачать</string>
+    <string name="journal_open">Открыть</string>
 </resources>

@@ -96,4 +96,8 @@
     <string name="account_app_settings">Application Settings</string>
     <string name="nav_route_account_app_settings" translatable="false">route/account/app_settings</string>
     <string name="journal_show_homework">Show homework</string>
+    <string name="journal_homework_copied">Homework copied</string>
+    <string name="journal_homework">Homework</string>
+    <string name="journal_download">Download</string>
+    <string name="journal_open">Open</string>
 </resources>

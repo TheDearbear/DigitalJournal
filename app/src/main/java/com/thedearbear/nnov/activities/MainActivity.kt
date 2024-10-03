@@ -1,14 +1,17 @@
 package com.thedearbear.nnov.activities
 
+import android.app.DownloadManager
+import android.content.ClipData
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -25,9 +28,7 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -47,6 +48,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -61,7 +64,6 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.thedearbear.nnov.R
 import com.thedearbear.nnov.Singleton
-import com.thedearbear.nnov.journal.Lesson
 import com.thedearbear.nnov.tabs.AccountTab
 import com.thedearbear.nnov.tabs.AnnouncementInfo
 import com.thedearbear.nnov.tabs.ApplicationSettings
@@ -71,10 +73,10 @@ import com.thedearbear.nnov.tabs.JournalTab
 import com.thedearbear.nnov.tabs.MailBoxMessageInfo
 import com.thedearbear.nnov.ui.composables.AccountLoadingDialog
 import com.thedearbear.nnov.tabs.MailBoxMessages
+import com.thedearbear.nnov.ui.composables.HomeworkSheet
 import com.thedearbear.nnov.ui.state.MainState
 import com.thedearbear.nnov.ui.theme.DigitalJournalTheme
 import com.thedearbear.nnov.ui.viewmodel.AnnouncementViewModel
-import com.thedearbear.nnov.ui.viewmodel.AppSettingsViewModel
 import com.thedearbear.nnov.ui.viewmodel.HomeViewModel
 import com.thedearbear.nnov.ui.viewmodel.JournalViewModel
 import com.thedearbear.nnov.ui.viewmodel.MailBoxMessageViewModel
@@ -227,14 +229,17 @@ class MainActivity : ComponentActivity() {
                             requestSnackbar = { message, args ->
                                 scope.launch {
                                     snackbarHostState.showSnackbar(
-                                        if (args.isNotEmpty()) getString(message) + ": ${args[0]}"
-                                        else getString(message)
+                                        message = if (args.isNotEmpty()) {
+                                            getString(message) + ": ${args[0]}"
+                                        } else {
+                                            getString(message)
+                                        }
                                     )
                                 }
                             },
                             requestSheet = { content ->
                                 sheetContent = content
-                                showSheet = true
+                                showSheet = content != null
                             }
                         )
                     }
@@ -250,7 +255,7 @@ class MainActivity : ComponentActivity() {
         state: MainState,
         getNewAccountId: ActivityResultLauncher<Intent>,
         requestSnackbar: (Int, Array<out Any>) -> Unit,
-        requestSheet: (@Composable () -> Unit) -> Unit
+        requestSheet: ((@Composable () -> Unit)?) -> Unit
     ) {
         val navHome = stringResource(R.string.nav_route_home)
         val navHomeMessage = stringResource(R.string.nav_route_home_message)
@@ -294,6 +299,8 @@ class MainActivity : ComponentActivity() {
 
             composable(navJournal) {
                 val journalViewModel: JournalViewModel by viewModels()
+                val clipboard = LocalClipboardManager.current
+                val hwLocalized = stringResource(R.string.journal_homework)
 
                 JournalTab(
                     userId = state.id,
@@ -303,7 +310,36 @@ class MainActivity : ComponentActivity() {
                             val lesson = day.lessons[index]
 
                             requestSheet {
-                                HomeworkSheet(lesson)
+                                HomeworkSheet(
+                                    lesson = lesson,
+                                    onSelect = { hwIndex ->
+                                        val hwMessage = lesson.homework[hwIndex].message
+                                        val clipData = ClipData.newPlainText(hwLocalized, hwMessage)
+
+                                        clipboard.setClip(ClipEntry(clipData))
+                                        requestSheet(null)
+                                        requestSnackbar(R.string.journal_homework_copied, emptyArray())
+                                    },
+                                    onHomeworkOpen = { file ->
+                                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(file.file.toString()))
+                                        startActivity(intent)
+                                    },
+                                    onHomeworkDownload = { file ->
+                                        // TODO: Fix downloading ("Download unsuccessful.")
+                                        val manager = getSystemService(DownloadManager::class.java)
+
+                                        manager?.enqueue(DownloadManager.Request(
+                                            Uri.parse(file.file.toString())
+                                        ).setDestinationInExternalPublicDir(
+                                            Environment.DIRECTORY_DOWNLOADS,
+                                            file.name
+                                        ).setTitle(
+                                            file.name
+                                        ).setNotificationVisibility(
+                                            DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED
+                                        ))
+                                    }
+                                )
                             }
                         }
                     },
@@ -425,29 +461,6 @@ class MainActivity : ComponentActivity() {
                 ExtendedInformation(
                     onBack = { navController.popBackStack() },
                     viewModel = viewModel
-                )
-            }
-        }
-    }
-
-    @Composable
-    private fun HomeworkSheet(lesson: Lesson) {
-        Column(
-            Modifier.padding(4.dp)
-        ) {
-            Text(
-                modifier = Modifier.padding(4.dp),
-                text = lesson.name,
-                style = MaterialTheme.typography.titleLarge
-            )
-
-            lesson.homework.forEach { homework ->
-                HorizontalDivider()
-
-                Text(
-                    modifier = Modifier.padding(4.dp),
-                    text = homework.message,
-                    style = MaterialTheme.typography.bodyLarge
                 )
             }
         }
