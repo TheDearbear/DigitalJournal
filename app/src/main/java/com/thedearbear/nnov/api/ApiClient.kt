@@ -24,9 +24,9 @@ data class ApiClient(
     var authToken: String? = null,
     var vendor: String = ApiConstants.DEFAULT_VENDOR,
 ) {
-    private val userAgent: String = "DigitalJournal/" + BuildConfig.VERSION_NAME
     private var client: OkHttpClient = OkHttpClient()
 
+    val userAgent: String = "DigitalJournal/" + BuildConfig.VERSION_NAME
     val moshi: Moshi = Moshi.Builder()
         .add(DiaryDayAdapter())
         .add(RelationGroupsAdapter())
