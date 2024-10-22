@@ -325,7 +325,6 @@ class MainActivity : ComponentActivity() {
                                         startActivity(intent)
                                     },
                                     onHomeworkDownload = { file ->
-                                        // TODO: Fix downloading ("Download unsuccessful.")
                                         val manager = getSystemService(DownloadManager::class.java)
 
                                         manager?.enqueue(DownloadManager.Request(
@@ -337,6 +336,11 @@ class MainActivity : ComponentActivity() {
                                             file.name
                                         ).setNotificationVisibility(
                                             DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED
+                                        ).addRequestHeader(
+                                            "User-Agent",
+                                            // Using custom user-agent due to AndroidDownloadManager
+                                            // being detected as crawler server-side
+                                            Singleton.selectedAccount.client.userAgent
                                         ))
                                     }
                                 )
