@@ -100,4 +100,5 @@
     <string name="journal_homework">Homework</string>
     <string name="journal_download">Download</string>
     <string name="journal_open">Open</string>
+    <string name="login_error_gosuslugi">Logging in is only possible via GosUslugi</string>
 </resources>

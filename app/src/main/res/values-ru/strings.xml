@@ -90,4 +90,5 @@
     <string name="journal_homework">Домашняя работа</string>
     <string name="journal_download">Скачать</string>
     <string name="journal_open">Открыть</string>
+    <string name="login_error_gosuslugi">Вход возможен только через ГосУслуги</string>
 </resources>

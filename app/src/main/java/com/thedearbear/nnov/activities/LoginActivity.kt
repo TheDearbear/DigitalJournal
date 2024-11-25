@@ -307,29 +307,10 @@ class LoginActivity : ComponentActivity() {
                 finish()
             },
             onAuthFailure = { message ->
-                hideDialog()
-
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        if (message.contains("разраб"))
-                            getString(R.string.login_error_devkey)
-                        else if (message.contains("авторизация"))
-                            getString(R.string.login_error_token)
-                        else message
-                    )
-                }
+                onAuthFailure(message, scope, snackbarHostState, hideDialog)
             },
             onFailure = { e ->
-                hideDialog()
-
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        if (e is UnknownHostException)
-                            getString(R.string.login_error_domain)
-                        else
-                            "${getString(R.string.login_error_network)}: ${e.message}"
-                    )
-                }
+                onFailure(e, scope, snackbarHostState, hideDialog)
             }
         )
     }
@@ -393,6 +374,8 @@ class LoginActivity : ComponentActivity() {
                     getString(R.string.login_error_token)
                 else if (message.contains("логин"))
                     getString(R.string.login_error_login)
+                else if (message.contains("ГосУслуги"))
+                    getString(R.string.login_error_gosuslugi)
                 else message
             )
         }
