@@ -48,7 +48,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
+        kotlinCompilerExtensionVersion = "1.9.25"
     }
     packaging {
         resources {
@@ -82,7 +82,6 @@ dependencies {
     implementation(libs.androidx.material3.adaptive.navigation.suite.android)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    annotationProcessor(libs.androidx.room.compiler)
 
     ksp(libs.androidx.room.compiler)
     ksp(libs.dagger.compiler)
