@@ -230,9 +230,9 @@ class MainActivity : ComponentActivity() {
                                 scope.launch {
                                     snackbarHostState.showSnackbar(
                                         message = if (args.isNotEmpty()) {
-                                            getString(message) + ": ${args[0]}"
+                                            "${message}: ${args[0]}"
                                         } else {
-                                            getString(message)
+                                            message
                                         }
                                     )
                                 }
@@ -254,7 +254,7 @@ class MainActivity : ComponentActivity() {
         navController: NavHostController,
         state: MainState,
         getNewAccountId: ActivityResultLauncher<Intent>,
-        requestSnackbar: (Int, Array<out Any>) -> Unit,
+        requestSnackbar: (String, Array<out Any>) -> Unit,
         requestSheet: ((@Composable () -> Unit)?) -> Unit
     ) {
         val navHome = stringResource(R.string.nav_route_home)
@@ -289,10 +289,10 @@ class MainActivity : ComponentActivity() {
                     },
                     onSuccess = { },
                     onAuthFailure = { message ->
-                        requestSnackbar(R.string.login_error_invalid, arrayOf(message))
+                        onAuthFailure(message, requestSnackbar)
                     },
                     onFailure = { e ->
-                        requestSnackbar(R.string.login_error_network, arrayOf(e))
+                        requestSnackbar(getString(R.string.login_error_network), arrayOf(e))
                     }
                 )
             }
@@ -318,7 +318,7 @@ class MainActivity : ComponentActivity() {
 
                                         clipboard.setClip(ClipEntry(clipData))
                                         requestSheet(null)
-                                        requestSnackbar(R.string.journal_homework_copied, emptyArray())
+                                        requestSnackbar(getString(R.string.journal_homework_copied), emptyArray())
                                     },
                                     onHomeworkOpen = { file ->
                                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(file.file.toString()))
@@ -350,10 +350,10 @@ class MainActivity : ComponentActivity() {
                     onReloadRequest = { },
                     onReloadSuccess = { },
                     onAuthFailure = { message ->
-                        requestSnackbar(R.string.login_error_invalid, arrayOf(message))
+                        onAuthFailure(message, requestSnackbar)
                     },
                     onFailure = { e ->
-                        requestSnackbar(R.string.login_error_network, arrayOf(e))
+                        requestSnackbar(getString(R.string.login_error_network), arrayOf(e))
                     }
                 )
             }
@@ -392,14 +392,10 @@ class MainActivity : ComponentActivity() {
                     viewModel = viewModel,
                     onBack = { navController.popBackStack() },
                     onAuthFailure = { message ->
-                        if (message.contains("доступ")) {
-                            requestSnackbar(R.string.error_forbidden, arrayOf())
-                        } else {
-                            requestSnackbar(R.string.login_error_invalid, arrayOf(message))
-                        }
+                        onAuthFailure(message, requestSnackbar)
                     },
                     onFailure = { e ->
-                        requestSnackbar(R.string.login_error_network, arrayOf(e))
+                        requestSnackbar(getString(R.string.login_error_network), arrayOf(e))
                     }
                 )
             }
@@ -422,10 +418,10 @@ class MainActivity : ComponentActivity() {
                         )
                     },
                     onAuthFailure = { message ->
-                        requestSnackbar(R.string.login_error_invalid, arrayOf(message))
+                        onAuthFailure(message, requestSnackbar)
                     },
                     onFailure = { e ->
-                        requestSnackbar(R.string.login_error_network, arrayOf(e))
+                        requestSnackbar(getString(R.string.login_error_network), arrayOf(e))
                     }
                 )
             }
@@ -439,14 +435,10 @@ class MainActivity : ComponentActivity() {
                     viewModel = viewModel,
                     onBack = { navController.popBackStack() },
                     onAuthFailure = { message ->
-                        if (message.contains("доступ")) {
-                            requestSnackbar(R.string.error_forbidden, arrayOf())
-                        } else {
-                            requestSnackbar(R.string.login_error_invalid, arrayOf(message))
-                        }
+                        onAuthFailure(message, requestSnackbar)
                     },
                     onFailure = { e ->
-                        requestSnackbar(R.string.login_error_network, arrayOf(e))
+                        requestSnackbar(getString(R.string.login_error_network), arrayOf(e))
                     }
                 )
             }
@@ -616,5 +608,21 @@ class MainActivity : ComponentActivity() {
 
             Spacer(Modifier.weight(1f))
         }
+    }
+
+    private fun onAuthFailure(
+        message: String,
+        requestSnackbar: (String, Array<out Any>) -> Unit
+    ) {
+        requestSnackbar(
+            if (message.contains("разраб"))
+                getString(R.string.login_error_devkey)
+            else if (message.contains("авторизация"))
+                getString(R.string.login_error_invalid)
+            else if (message.contains("доступ"))
+                getString(R.string.error_forbidden)
+            else message,
+            emptyArray()
+        )
     }
 }

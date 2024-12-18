@@ -7,7 +7,6 @@ import com.thedearbear.nnov.api.adapters.DiaryDayAdapter
 import com.thedearbear.nnov.api.adapters.RelationGroupsAdapter
 import okhttp3.Call
 import okhttp3.Callback
-import okhttp3.FormBody
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -32,6 +31,7 @@ data class ApiClient(
         .add(RelationGroupsAdapter())
         .build()
 
+    // TODO: Fix multiple identical calls of API requests in one time
     inline fun <reified T> runRequest(
         call: Call,
         crossinline onSuccess: (T) -> Unit,
@@ -45,13 +45,13 @@ data class ApiClient(
 
             override fun onResponse(call: Call, response: Response) {
                 val adapter = moshi.adapter<ApiAnswer<T>>(typeOf<ApiAnswer<T>>().javaType)
-
                 val parsed: T
 
                 response.use {
                     val apiResponse = adapter.fromJson(response.body!!.source())!!.response
+                    val isSuccessful = apiResponse.state in 200..299
 
-                    if (response.isSuccessful.not()) {
+                    if (response.isSuccessful.not() || !isSuccessful || apiResponse.result == null) {
                         onAuthFailure(apiResponse.error!!)
                         return
                     }
@@ -65,15 +65,13 @@ data class ApiClient(
     }
 
     fun auth(login: String, password: String): Call {
-        val url = createUrlBuilder("apiv3/auth").build()
-
-        val body = FormBody.Builder()
-            .add("login", login)
-            .add("password", password)
+        val url = createUrlBuilder("apiv3/auth")
+            .addQueryParameter("login", login)
+            .addQueryParameter("password", password)
             .build()
 
         val request = createRequestBuilder(url)
-            .post(body)
+            .get()
             .build()
 
         return client.newCall(request)

@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 data class ApiResponse<T>(
     val state: Int = 0,
     val error: String? = null,
-    val result: T
+    val result: T?
 )
